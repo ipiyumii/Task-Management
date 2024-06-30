@@ -1,7 +1,17 @@
-import { Component, computed, signal } from '@angular/core';
-import { DUMMY_USERS } from '../dummy-users';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { User } from './user.model';
 
-const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length)
+// type User = {
+//   id: string;
+//   avatar: string;
+//   name: string;
+// }
+
+// interface User {
+//   id: string;
+//   avatar: string;
+//   name: string;
+// }
 
 @Component({
   selector: 'app-user',
@@ -11,18 +21,31 @@ const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length)
   styleUrl: './user.component.css'
 })
 export class UserComponent {
-  // selectedUser = DUMMY_USERS[randomIndex]
+  @Input({required: true}) user!: User;
+  @Input({required: true}) selected!: boolean;
+  @Output()select = new EventEmitter();
 
-  selectedUser = signal(DUMMY_USERS[randomIndex]) 
-  imagePath = computed(() => 'assets/users/' + this.selectedUser().avatar)
+  get imagePath() {
+    return 'assets/users/' + this.user.avatar
+  }
+
+  onSelectUser(){
+    this.select.emit(this.user.id);
+  }
+
+
+  // selectedUser = DUMMY_USERS[randomIndex]
+  // selectedUser = signal(DUMMY_USERS[randomIndex])
+  // imagePath = computed(() => 'assets/users/' + this.selectedUser().avatar)
 
   // get imagePath() {
   //   return 'assets/users/' + this.selectedUser.avatar
   // }
 
-  onSelectUser() {
-    const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length);
-    this.selectedUser.set(DUMMY_USERS[randomIndex])
+  // onSelectUser() {
+    // const randomIndex = Math.floor(Math.random() * DUMMY_USERS.length);
+    // this.selectedUser.set(DUMMY_USERS[randomIndex])
     // this.selectedUser = DUMMY_USERS[randomIndex]
-  }
+  // }
+
 }
